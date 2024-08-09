@@ -51,12 +51,12 @@ int main()
 
     for (int i = 0; i < 3; i++)
     {
-        pthread_create(&read[i], NULL, (void *(*)(void *))reader, (void *)&a[i]);
+        pthread_create(&read[i], NULL, (void *)reader, (void *)&a[i]);
     }
 
     for (int i = 0; i < 3; i++)
     {
-        pthread_create(&write[i], NULL, (void *(*)(void *))writer, (void *)&a[i]);
+        pthread_create(&write[i], NULL, (void *)writer, (void *)&a[i]);
     }
 
     for (int i = 0; i < 3; i++)
