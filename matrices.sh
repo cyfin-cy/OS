@@ -1,47 +1,45 @@
 #!/bin/bash
 
+read -p "Enter the size of the matrix: " n
 display()
 {
   arr=("$@")
-  for (( i=0; i<9; i+=3 ))
+  for (( i=0 ; i<$((n*n)); i+=n ))
   do
-    echo "${arr[i]} ${arr[i+1]} ${arr[i+2]}"
+   row=""
+   for (( j=0; j<n; j++))
+   do
+     row="$row ${arr[i+j]}"
+   done
+  echo "$row"
   done
- }
- 
- add_matrices()
+}
+
+add_matrices()
 {
-  for (( i=0; i<9; i++ ))
+  for (( i=0; i<$((n*n)); i++ ))
   do
-      sum[i]=$((mat1[i]+mat2[i]))
+    sum[i]=$((mat1[i] +mat2[i]))
   done
- }
- 
- echo "Enter the elements of the first matrix: "
- for (( i=0; i<9; i++ ))
-  do
-      read -p "enter element at index ($((i/3)), $((i%3))): " mat1[i]
-  done
-  
-  echo "Enter the elements of the second matrix: "
- for (( i=0; i<9; i++ ))
-  do
-      read -p "enter element at the index ($((i/3)), $((i%3))): " mat2[i]
-  done
-  echo
-  
-  display "${mat1[@]}"
-  
-  echo
-  
-  display "${mat2[@]}"
-  echo
-  echo "The sum matrix is as follows: "
-  echo
-  
-  add_matrices
-  display "${sum[@]}"
-  
-  
-      
-      
+}
+
+echo "Enter the elements of the first matrix: "
+for (( i=0; i<$((n*n)); i++ ))
+do
+  read -p "Elements at [$((i/n)),$((i%n))]: " mat1[i]
+done
+
+echo "Enter the elements of the second matrix: "
+for (( i=0; i<$((n*n)); i++ ))
+do
+  read -p "Elements at [$((i/n)),$((i%n))]: " mat2[i]
+done
+
+display "${mat1[@]}"
+
+echo
+
+display "${mat2[@]}"
+echo "The sum matrix is : "
+add_matrices
+display "${sum[@]}"
