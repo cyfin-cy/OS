@@ -1,0 +1,63 @@
+//SJF NON-PREEMPTIVE 6b
+#include<stdio.h>
+#include<stdlib.h>
+
+struct pro
+{
+   int id,AT,BT,CT,TAT,WT,RT,isFin;
+}p[15];
+
+void sjf(int n){
+   int tTAT=0,tWT=0,tRT=0,curT=0,delay=0,remP=n,minI,minB;
+   float aTAT,aWT,aRT;
+   while (remP)
+   {
+       minI=-1,minB=9999;
+       for(int i=0;i<n;i++){
+           if(p[i].AT<=curT && !p[i].isFin && p[i].BT<minB){
+               minI = i;
+               minB = p[i].BT;
+           }
+       }
+       if(minI == -1){
+           delay++;curT++;
+       }
+       else{
+           if(delay > 0){
+               printf("**  %d | ",curT);delay=0;
+           }
+               p[minI].RT = curT - p[minI].AT;
+               curT += p[minI].BT;
+               p[minI].CT = curT;
+               p[minI].TAT = curT - p[minI].AT;
+               p[minI].WT = p[minI].TAT - p[minI].BT;
+               remP--;
+               p[minI].isFin = 1;
+               printf("P%d  %d | ",p[minI].id,curT);
+               tTAT += p[minI].TAT;
+               tWT += p[minI].WT;
+               tRT += p[minI].RT;
+       }
+   }
+   aTAT = (float)tTAT/n;
+   aWT = (float)tWT/n;
+   aRT = (float)tRT/n;
+   printf("\nObservation table \nPID\tAT\tBT\tCT\tTAT\tWT\tRT\n");
+   for(int i=0;i<n;i++)
+       printf("%d\t%d\t%d\t%d\t%d\t%d\t%d\n",p[i].id,p[i].AT,p[i].BT,p[i].CT,p[i].TAT,p[i].WT,p[i].RT);
+   printf("Avg TAT : %f\nAvg WT : %f\nAvg RT : %f ",aTAT,aWT,aRT);
+}
+
+void main(){
+   printf("\nEnter n");
+   int n;
+   scanf("%d",&n);
+   printf("\nEnter AT and BT for processes");
+   printf("\nAT BT\n");
+   for(int i=0;i<n;i++){
+       p[i].id = i+1;
+       scanf("%d %d",&p[i].AT,&p[i].BT);
+       p[i].isFin = 0;
+   }
+   sjf(n);
+}
