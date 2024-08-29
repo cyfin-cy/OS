@@ -1,0 +1,83 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+typedef struct node
+{
+  int pid, AT, BT, CT, TAT, WT, RT, remt;
+}Process;
+Process p[15];
+
+void sjfP(int);
+
+int main()
+{
+  int n;
+  printf("Enter the number of processes: ");
+  scanf("%d", &n);
+  printf("\nAT  BT\n");
+  for(int i=0; i<n; i++)
+  {
+   scanf("%d%d", &p[i].AT, &p[i].BT);
+   p[i].pid=i+1;
+   p[i].remt=p[i].BT;
+  }
+  sjfP(n);
+  return 0;
+}
+
+void sjfP(int n)
+{
+  int totalTAT=0, totalWT=0, totalRT=0;
+  int mini, minb, rempro=n, curT=0;
+  float avgTAT, avgWT, avgRT;
+  while(rempro)
+  {
+    mini=-1;
+    minb=9999;
+    for(int i=0; i<n; i++)
+      if(p[i].AT<=curT  && p[i].BT<minb && p[i].remt)
+      {
+        mini=i;
+        minb=p[i].BT;
+      }
+      //instead of delay
+      if(mini==-1)
+      {
+        printf("** %d |",++curT);
+      }
+      else
+      {
+        if(p[mini].remt==p[mini].BT)
+        {
+          p[mini].RT=curT-p[mini].AT;
+          totalRT+=p[mini].RT;
+        }
+        p[mini].remt--;
+        curT++;
+        printf("p%d  %d |",p[mini].pid, curT);
+        
+        if(p[mini].remt==0)
+        {
+          p[mini].CT=curT;
+          p[mini].TAT=p[mini].CT-p[mini].AT;
+          p[mini].WT=p[mini].TAT-p[mini].BT;
+          totalTAT+=p[mini].TAT;
+          totalWT+=p[mini].WT;
+          totalRT+=p[mini].RT;
+          rempro--;
+         }
+       }
+     }
+     printf("\nPID\tAT\tBT\tCT\tTAT\tRT\tWT\n"); 
+     for(int i=0; i<n; i++)
+     {
+       printf("%d\t%d\t%d\t%d\t%d\t%d\t%d\n",p[i].pid,p[i].AT,p[i].BT,p[i].CT,p[i].TAT,p[i].RT,p[i].WT);
+     }
+     avgTAT=(float)totalTAT/n;
+     avgWT=(float)totalWT/n;
+     avgRT=(float)totalRT/n;
+     printf("The average TAT, RT, WT are: %.2f\t%.2f\t%.2f\n", avgTAT, avgRT, avgWT);
+  }
+  
+      
+          
